@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import connection from "../../config/dbConnect";
 
 interface CategoryAttributes {
-  id?: number;
+  id?: string;
   name?: string | null;
 
   createdAt?: Date;
@@ -13,7 +13,7 @@ export interface CategoryInput extends Optional<CategoryAttributes, 'id'> {}
 export interface CategoryOutput extends Required<CategoryAttributes> {}
 
 class Category extends Model<CategoryAttributes, CategoryInput> implements CategoryAttributes {
-  public id!: number;
+  public id!: string;
   public name!: string;
 
   public readonly createdAt!: Date;
@@ -31,9 +31,9 @@ Category.init(
   {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
     },
     name: {
       allowNull: true,

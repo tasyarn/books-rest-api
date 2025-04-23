@@ -6,7 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 const JWT_EXPIRES_IN = "1h"; // token expiration time
 
 export interface JwtPayload {
-  id: number;
+  id: string;
   email: string;
   role: string;
 }

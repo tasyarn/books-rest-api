@@ -3,7 +3,7 @@ import { verifyToken } from "../services/authService";
 
 export interface AuthRequest extends Request {
   user?: {
-    id: number;
+    id: string;
     email: string;
     role: string;
   };

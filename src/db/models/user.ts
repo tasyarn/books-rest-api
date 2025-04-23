@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import connection from "../../config/dbConnect";
 
 interface UserAttributes {
-  id?: number;
+  id?: string;
   name?: string | null;
   email?: string | null;
   password?: string | null;
@@ -16,7 +16,7 @@ export interface UserInput extends Optional<UserAttributes, 'id'> {}
 export interface UserOutput extends Required<UserAttributes> {}
 
 class User extends Model<UserAttributes, UserInput> implements UserAttributes {
-  public id!: number;
+  public id!: string;
   public name!: string;
   public email!: string;
   public password!: string;
@@ -27,7 +27,7 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
 
   static associate(models: any) {
     // define association here
-    // Contoh kalau nanti mau relasi: User.hasMany(models.Book)
+    // Example: User.hasMany(models.Book)
   }
 }
 
@@ -35,9 +35,9 @@ User.init(
   {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
     },
     name: {
       allowNull: true,

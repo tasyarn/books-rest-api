@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getUserByEmail, createUser as createUserService } from "../services/userService";
 import { generateToken, setTokenCookie } from "../services/authService";
 import argon2 from "argon2";
+import { v4 as uuidv4 } from "uuid";
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
@@ -27,7 +28,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       status: "success",
       message: "Login successful",
-      data: { token },
+      data: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        token: token,
+      },
     });
   } catch (error) {
     console.error(error);
@@ -36,7 +43,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
     console.log("Checking email:", email);
@@ -48,8 +55,10 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
 
     console.log("Password to hash:", password);
     const hashedPassword = await argon2.hash(password);
-    // Set default role to "user"
-    const newUser = await createUserService({ name, email, password: hashedPassword, role: "user" });
+    // Use provided role or default to "user"
+    const userRole = role;
+    const id = uuidv4();
+    const newUser = await createUserService({ id, name, email, password: hashedPassword, role: userRole });
 
     res.status(201).json({
       status: "success",
